@@ -20,7 +20,7 @@ public class MyProgram {
 		citiesAlias.put("montreal", "MTL");
 		citiesAlias.put("washington","WSL");
 		citiesAlias.put("new delhi","NDH");
-		boolean response;
+		String[] response;
 		try {
 			if (System.getSecurityManager() == null)
 				System.setSecurityManager ( new SecurityManager() );
@@ -67,7 +67,6 @@ public class MyProgram {
 						throw new Exception();
 					}
 
-					//System.out.println((server.getBookedFlightCount("sdfds"))[0]);
 
 					System.out.println("Arriving to:");
 					arrival = br.readLine();
@@ -101,11 +100,12 @@ public class MyProgram {
 
 					//Call BookFLight here
 					response = server.bookFlight(firstName, lastName, address, phoneNumber, arrival, deptDate, time, flightType);
-					if(response) {
-						System.out.println("Your flight has been successfully booked");
+					if(response[0].equals("Success")) {
+						System.out.println(response[0]+": "+response[1]);
 						Logger.writeLog("Success","BookFlight", departure, "Flight has been successfuly booked with following information ("+departure+' '+deptDate+' '+time+' '+arrival+' '+firstName+' '+lastName, null);
 
 					} else {
+						System.out.println(response[0]+": "+response[1]);
 						Logger.writeLog("Error","BookFlight", departure, "Error occured while booking a flight, please see server logs. ("+departure+' '+deptDate+' '+time+' '+arrival+' '+firstName+' '+lastName, null);
 					}
 
@@ -142,7 +142,7 @@ public class MyProgram {
 				if(s.equals("1")) {
 					System.out.println("");
 					System.out.println(">>>>>>>| Please Wait, contacting server for booked flight count. |<<<<<<<");
-					System.out.println((server.getBookedFlightCount()));
+					System.out.println("Total Booked flight across all servers are: "+server.getBookedFlightCount(managerId[0]+managerId[1]));
 
 				} else if(s.equals("2")) {
 					//Edit a record
@@ -193,13 +193,15 @@ public class MyProgram {
 
 					System.out.println("");
 					System.out.println(">>>>>>>| Please Wait, while we modify the flight record |<<<<<<<");
+					newValue+="|"+managerId[0]+managerId[1];
 					response = server.editFlightRecord(recordId, fieldName, newValue);
-					if(response) {
-						System.out.println("Your flight record has been successfully changed.");
-						Logger.writeLog("Success","editFlightRecord", "", "Flight record has been successfuly changed with the information ("+recordId+' '+fieldName+' '+newValue, managerId[1]);
+					if(response[0].equals("Success")) {
+						System.out.println(response[0]+": "+response[1]);
+						Logger.writeLog("Success","editFlightRecord", "", "Flight record has been successfuly changed with the information ("+recordId+' '+fieldName+' '+newValue, managerId[0]+managerId[1]);
 
 					} else {
-						Logger.writeLog("Error","BookFlight", "", "Error occured while modifying your flight record, please see server logs. ("+recordId+' '+fieldName+' '+newValue, managerId[1]);
+						System.out.println(response[0]+": "+response[1]);
+						Logger.writeLog("Error","BookFlight", "", "Error occured while modifying your flight record, please see server logs. ("+recordId+' '+fieldName+' '+newValue, managerId[0]+managerId[1]);
 					}
 
 
@@ -223,14 +225,15 @@ public class MyProgram {
 					System.out.println("Seating capacity for FIRST CLASS:");
 					firstClassSeats = Integer.parseInt(br.readLine());
 
-					response = server.addFlightRecord(arrivalCity, deptDate, deptTime, economySeats, businessSeats, firstClassSeats);
+					response = server.addFlightRecord(arrivalCity+"|"+managerId[0]+managerId[1], deptDate, deptTime, economySeats, businessSeats, firstClassSeats);
 
-					if(response) {
-						System.out.println("Your flight has been successfully added");
-						Logger.writeLog("Success","AddFlight", managerId[0], "A new Flight has been successfuly added ("+managerId[0]+' '+deptDate+' '+deptTime+' '+arrivalCity, managerId[1]);
+					if(response[0].equals("Success")) {
+						System.out.println(response[0]+": "+response[1]);
+						Logger.writeLog("Success","AddFlight", managerId[0], "A new Flight has been successfuly added ("+managerId[0]+' '+deptDate+' '+deptTime+' '+arrivalCity, managerId[0]+managerId[1]);
 
 					} else {
-						Logger.writeLog("Error","AddFlight", managerId[0], "Error occured while adding a new flight, please see server logs. ("+managerId[0]+' '+deptDate+' '+deptTime+' '+arrivalCity, managerId[1]);
+						System.out.println(response[0]+": "+response[1]);
+						Logger.writeLog("Error","AddFlight", managerId[0], "Error occured while adding a new flight, please see server logs. ("+managerId[0]+' '+deptDate+' '+deptTime+' '+arrivalCity, managerId[0]+managerId[1]);
 					}
 
 
@@ -243,28 +246,20 @@ public class MyProgram {
 					deptDate = br.readLine();
 					System.out.println("Enter the Record ID: ");
 					recordId = Integer.parseInt(br.readLine());
-					response = server.removeFlight(deptDate, recordId);
-					if(response) {
-						System.out.println("Your flight has been successfully removed");
-						Logger.writeLog("Success","removeFlight", managerId[0], "Your Flight has been successfuly removed ("+managerId[0]+' '+deptDate+' '+recordId, managerId[1]);
+					response = server.removeFlight(deptDate+"|"+managerId[0]+managerId[1], recordId);
+					if(response[0].equals("Success")) {
+						System.out.println(response[0]+": "+response[1]);
+						Logger.writeLog("Success","removeFlight", managerId[0], "Your Flight has been successfuly removed ("+managerId[0]+' '+deptDate+' '+recordId, managerId[0]+managerId[1]);
 
 					} else {
-						Logger.writeLog("Error","AddFlight", managerId[0], "Error occured while removing your flight, please see server logs. ("+managerId[0]+' '+deptDate+' '+recordId, managerId[1]);
+						System.out.println(response[0]+": "+response[1]);
+						Logger.writeLog("Error","AddFlight", managerId[0], "Error occured while removing your flight, please see server logs. ("+managerId[0]+' '+deptDate+' '+recordId, managerId[0]+managerId[1]);
 					}
 
 				} else {
 					System.out.println("Invalid option selected, the program is now exiting");
 				}
 			}
-
-
-
-
-
-
-			/*
-			System.out.println(server.bookFlight("Muhammad", "Umer", "SDFF", 43434, "Karachi", "2016-12-25", "21:05", "Economy"));
-			 */
 
 
 		} catch (Exception e)

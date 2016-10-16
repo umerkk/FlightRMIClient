@@ -1,0 +1,2 @@
+[16/10/2016 18:45:16] Success: Client executed "AddFlight" on server "MTL". Invocation came from Manager with ID MTL1234 with additional following information (A new Flight has been successfuly added (MTL 22 22 karachi).
+[16/10/2016 18:46:01] Success: Client executed "removeFlight" on server "MTL". Invocation came from Manager with ID MTL1234 with additional following information (Your Flight has been successfuly removed (MTL 22 1).
